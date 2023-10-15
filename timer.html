@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TIMER</title>
+</head>
+
+<body>
+    <div id="timer-container" align="center">
+        <div id="total-time-left"> </div>
+        <button id="stop-button" class="btn btn-danger mt-5">STOP</button>
+    </div>
+</body>
+
+<script>
+    // Get the selectedHours value from local storage
+    var selectedHours = localStorage.getItem("selectedHours");
+
+    var hours = 1000 * 60 * 60;
+    var minutes = 1000 * 60;
+    var seconds = 1000;
+
+    // Initialize count_timer with selectedHours
+    if (localStorage.getItem("count_timer")) {
+        var count_timer = localStorage.getItem("count_timer");
+    } else {
+        var count_timer = selectedHours * 3600; // Convert selectedHours to seconds
+    }
+
+    function countDownTimer() {
+        var hours = Math.floor(count_timer / 3600); // Calculate hours
+        var remainingSeconds = count_timer % 3600;
+        var minutes = Math.floor(remainingSeconds / 60); // Calculate minutes
+        var remainingSeconds = remainingSeconds % 60; // Calculate remaining seconds
+
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+
+        if (remainingSeconds < 10) {
+            remainingSeconds = "0" + remainingSeconds;
+        }
+
+        document.getElementById("total-time-left").innerHTML = "Time Left: " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds";
+
+        if (count_timer <= 0) {
+            localStorage.removeItem("count_timer"); // Remove the countdown timer from local storage
+        } else {
+            count_timer = count_timer - 1;
+            localStorage.setItem("count_timer", count_timer);
+            setTimeout(countDownTimer, 1000);
+        }
+    }
+
+    setTimeout(countDownTimer, 1000);
+</script>
+</html>
