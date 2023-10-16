@@ -4,15 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>StartStop prac bootstrap</title>
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
     <link rel="stylesheet" href="html\css\main.css" />
 
-    <script  src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script  src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script  src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
+    <!-- script for activating pagination and tabular form -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   </head>
   <body>
     <div class="row">
@@ -131,7 +137,7 @@
             <div class="col-12 mb-5 text-center">
               <button
                 type="button"
-                class="btn btn-success btn-lg mt-5  w-25 btn-resize"
+                class="btn btn-success btn-lg mt-5 w-25 btn-resize"
                 id="start-work-button"
               >
                 START WORK
@@ -141,27 +147,27 @@
           <!-- Button ending-->
 
           <!-- Log entries -->
-          <table id="example" class="table table-striped" style="width:100%">
+          <table id="example" class="table table-striped" style="width: 100%">
             <thead>
-                <tr>
-                    <th>Time started</th>
-                    <th>Clocked Out</th>
-                    <th>Time</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                </tr>
+              <tr>
+                <th>Time started</th>
+                <th>Clocked Out</th>
+                <th>Time</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011-04-25</td>
-                    <td>$320,800</td>
-                </tr>
-              </tbody>
+              <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011-04-25</td>
+                <td>$320,800</td>
+              </tr>
+            </tbody>
           </table>
           <!-- Log entries ending -->
         </div>
@@ -170,9 +176,18 @@
 
     <script>
       $(document).ready(function () {
+        //data table library
+        new DataTable("#example");
 
-        
-      //for disabling feature 1-12  numbers input only
+        //for getting the remaining time from timer.html
+        var remainingTimeConsole = localStorage.getItem("remainingLog");
+        var stopTimeStamp = localStorage.getItem("stopTimeStamp");
+        var selectedWorkType = localStorage.getItem("selectedWorkType");
+
+        console.log(remainingTimeConsole);
+        console.log(selectedWorkType + " Stopped at: " + stopTimeStamp);
+
+        //for disabling feature 1-12  numbers input only
         $("#numberInput").change(function () {
           var inputhours = $("#numberInput").val();
           if (inputhours <= 0 || inputhours > 12) {
@@ -183,10 +198,6 @@
         });
 
         var remainingTime = localStorage.getItem("remainingTime");
-        console.log("Remaining time: ", remainingTime);
-
-        var stopEntryText = localStorage.getItem("stopEntryText");
-        console.log(stopEntryText);
 
         $("#start-work-button").click(function () {
           // Get the selected number of hours and work type
