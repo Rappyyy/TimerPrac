@@ -183,9 +183,11 @@
         var remainingTimeConsole = localStorage.getItem("remainingLog");
         var stopTimeStamp = localStorage.getItem("stopTimeStamp");
         var selectedWorkType = localStorage.getItem("selectedWorkType");
+        let consumedTime = localStorage.getItem("consumedTime");
 
         console.log(remainingTimeConsole);
         console.log(selectedWorkType + " Stopped at: " + stopTimeStamp);
+        console.log("Total consumed time", consumedTime);
 
         //for disabling feature 1-12  numbers input only
         $("#numberInput").change(function () {
@@ -197,16 +199,19 @@
           }
         });
 
-        var remainingTime = localStorage.getItem("remainingTime");
-
         $("#start-work-button").click(function () {
           // Get the selected number of hours and work type
           var selectedHours = $("#numberInput").val(); // Get the value from the number input
           var selectedWorkType = $("#select-work-type").val(); // Get the selected option's value
 
           // Log the timestamp
-          var timestamp = new Date().toLocaleString();
+          var timestamp = new Date().toLocaleString("en-us", { hour12: false });
           console.log("Work started at: " + timestamp);
+          var inputhours = $("#numberInput").val();
+
+          if (selectedHours <= 0 || selectedHours > 12) {
+            $("#start-work-button").prop("disabled", false);
+          }
 
           // Store the data in session storage
           localStorage.setItem("selectedHours", selectedHours);

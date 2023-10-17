@@ -22,22 +22,50 @@
     // getting localstorage
     var timeStarted = localStorage.getItem("startTime");
     var workType = localStorage.getItem("selectedWorkType");
+    // Get the selectedHours value from local storage
+    var selectedHours = localStorage.getItem("selectedHours");
 
     //to print start time in console
     console.log(workType + " Started at: " + timeStarted);
-
-    // Get the selectedHours value from local storage
-    var selectedHours = localStorage.getItem("selectedHours");
 
     var hours = 1000 * 60 * 60;
     var minutes = 1000 * 60;
     var seconds = 1000;
 
     // Initialize count_timer with selectedHours
+    // The code initializes the count_timer variable.
+    //  If it finds a value with the key "count_timer" in local storage,
+    // it retrieves that value. If not, it calculates the initial timer value
+    //  based on the selectedHours, converting hours to seconds.
     if (localStorage.getItem("count_timer")) {
       var count_timer = localStorage.getItem("count_timer");
     } else {
       var count_timer = selectedHours * 3600; // Convert selectedHours to seconds
+    }
+
+    //  static timestamp
+    const staticTimestamp = "10/17/2023, 13:22:22";
+
+    const hoursToAdd = 3;
+    const minutesToAdd = 4;
+    const secondsToAdd = 4;
+
+    // Parse  timestamp into a  Date object
+    const originalDate = new Date(staticTimestamp);
+
+    // specify number of times statically
+    originalDate.setHours(originalDate.getHours() + hoursToAdd);
+    originalDate.setMinutes(originalDate.getMinutes() + minutesToAdd);
+    originalDate.setSeconds(originalDate.getSeconds() + secondsToAdd);
+
+    console.log(originalDate);
+
+    function calculateConsumedTime() {
+      const selectedHoursInSeconds = selectedHours * 3600;
+
+      const consumedTime = selectedHoursInSeconds - count_timer;
+
+      return consumedTime;
     }
 
     function countDownTimer() {
@@ -114,10 +142,17 @@
 
         localStorage.setItem("remainingLog", remainingLog);
         localStorage.removeItem("count_timer");
+
         window.location.href = "main.html";
 
-        var timestamp = new Date().toLocaleString();
+        var stopTimeStamp = new Date("en-us", {
+          hour12: false,
+        });
+        let c = calculateConsumedTime();
+        console.log(c);
         localStorage.setItem("stopTimeStamp", timestamp);
+        localStorage.setItem("consumedTime", c);
+        console.log("Works till here asd asd sa!");
       });
 
     setTimeout(countDownTimer, 1000);
