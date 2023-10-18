@@ -43,22 +43,22 @@
       var count_timer = selectedHours * 3600; // Convert selectedHours to seconds
     }
 
-    //  static timestamp
-    const staticTimestamp = "10/17/2023, 13:22:22";
+    // //  static timestamp
+    // const staticTimestamp = "10/17/2023, 13:22:22";
 
-    const hoursToAdd = 3;
-    const minutesToAdd = 4;
-    const secondsToAdd = 4;
+    // const hoursToAdd = 3;
+    // const minutesToAdd = 4;
+    // const secondsToAdd = 4;
 
-    // Parse  timestamp into a  Date object
-    const originalDate = new Date(staticTimestamp);
+    // // Parse  timestamp into a  Date object
+    // const originalDate = new Date(staticTimestamp);
 
-    // specify number of times statically
-    originalDate.setHours(originalDate.getHours() + hoursToAdd);
-    originalDate.setMinutes(originalDate.getMinutes() + minutesToAdd);
-    originalDate.setSeconds(originalDate.getSeconds() + secondsToAdd);
+    // // specify number of times statically
+    // originalDate.setHours(originalDate.getHours() + hoursToAdd);
+    // originalDate.setMinutes(originalDate.getMinutes() + minutesToAdd);
+    // originalDate.setSeconds(originalDate.getSeconds() + secondsToAdd);
 
-    console.log(originalDate);
+    // console.log(originalDate);
 
     function calculateConsumedTime() {
       const selectedHoursInSeconds = selectedHours * 3600;
@@ -86,6 +86,7 @@
         remainingSeconds = "0" + remainingSeconds;
       }
 
+      // to change the Timer display into this format
       document.getElementById("total-time-left").innerHTML =
         "Time Left: " +
         hours +
@@ -119,7 +120,6 @@
         localStorage.setItem("count_timer", count_timer);
         setTimeout(countDownTimer, 1000);
       }
-      // Event listener for the STOP button
     }
 
     document
@@ -140,19 +140,23 @@
           remainingSeconds +
           " Seconds";
 
+        //timestamp when stop button is clicked!
+        var stopTimeStamp = new Date().toLocaleString("en-us", {
+          hour12: false,
+        });
+        localStorage.setItem("stopTimeStamp", stopTimeStamp);
+
+        console.log(stopTimeStamp);
+        // put the calculateConsumedTime() function in a variable to easily store in localstorage
+        let c = calculateConsumedTime();
+        console.log(c);
+        // store let c in localstorage containing the calculateConsumedTime() function.
+        localStorage.setItem("consumedTime", c);
+        //store remaining time log in localstorage
         localStorage.setItem("remainingLog", remainingLog);
         localStorage.removeItem("count_timer");
 
         window.location.href = "main.html";
-
-        var stopTimeStamp = new Date("en-us", {
-          hour12: false,
-        });
-        let c = calculateConsumedTime();
-        console.log(c);
-        localStorage.setItem("stopTimeStamp", timestamp);
-        localStorage.setItem("consumedTime", c);
-        console.log("Works till here asd asd sa!");
       });
 
     setTimeout(countDownTimer, 1000);
