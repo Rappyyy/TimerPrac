@@ -117,7 +117,12 @@
               <div class="col"></div>
               <div class="col">
                 <div class="form-group w-75 ms-5">
-                  <label><small>Accepts number from 1-12 only</small></label>
+                  <label class="badge text-secondary"
+                    ><small
+                      >Please enter a number from 0.003(10 secs) to 12.
+                    </small></label
+                  >
+
                   <input
                     type="number"
                     class="form-control"
@@ -125,6 +130,9 @@
                     value="1"
                     required
                   />
+                  <span class="badge text-secondary" id="equivalentTime">
+                    <small>Total Equivalent Time: </small></span
+                  >
                 </div>
               </div>
               <div class="col"></div>
@@ -139,12 +147,58 @@
                 type="button"
                 class="btn btn-success btn-lg mt-5 w-25 btn-resize"
                 id="start-work-button"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmationModal"
               >
                 START WORK
               </button>
             </div>
           </div>
           <!-- Button ending-->
+
+          <!-- Modal for confirmation -->
+          <div
+            class="modal fade"
+            id="confirmationModal"
+            tabindex="-1"
+            aria-labelledby="confirmationModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="confirmationModalLabel">
+                    Start Work Confirmation
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <p id="confirmationMessage"></p>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="confirmStartWork"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Log entries -->
           <table id="example" class="table table-striped" style="width: 100%">
@@ -176,10 +230,60 @@
 
     <script>
       $(document).ready(function () {
-        //data table library
+        // Data table library
         new DataTable("#example");
 
-        //for getting the remaining time from timer.html
+        var inputTimer;
+
+        // Event listener for the numberInput field
+        $("#numberInput").on("input", function () {
+          // Clear any previously set timers to avoid frequent updates
+          clearTimeout(inputTimer);
+
+          // Start a new timer to update the label after a short delay
+          inputTimer = setTimeout(function () {
+            var inputHours = parseFloat($("#numberInput").val());
+
+            // Available input starts at 0.003, which is equivalent to 10 seconds
+            if (inputHours >= 0.003 && inputHours <= 12) {
+              // Calculate the equivalent time in hours, minutes, and seconds
+              var equivalentHours = Math.floor(inputHours);
+              var remainingMinutes = Math.floor(
+                (inputHours - equivalentHours) * 60
+              ); // Rounding to the nearest minute
+              var remainingSeconds = Math.floor(
+                (inputHours - equivalentHours - remainingMinutes / 60) * 3600
+              ); // Rounding to the nearest second
+
+              // Function to format hours, minutes, and seconds with leading zeros
+              function formatTimeUnit(timeUnit) {
+                return String(timeUnit).padStart(2, "0");
+              }
+
+              equivalentHours = formatTimeUnit(equivalentHours);
+              remainingMinutes = formatTimeUnit(remainingMinutes);
+              remainingSeconds = formatTimeUnit(remainingSeconds);
+
+              // Update the label with the equivalent time
+              $("#equivalentTime").html(
+                "<small>Equivalent Time: " +
+                  equivalentHours +
+                  ":" +
+                  remainingMinutes +
+                  ":" +
+                  remainingSeconds +
+                  "</small>"
+              );
+            } else {
+              // If the input is not within the valid range, show an error message
+              $("#equivalentTime").html(
+                "<small>Please enter a number from 0.003 (10 secs) to 12.</small>"
+              );
+            }
+          }, 500); // Delay for 500 milliseconds before updating
+        });
+
+        // For getting the remaining time from timer.html
         var remainingTimeConsole = localStorage.getItem("remainingLog");
         var stopTimeStamp = localStorage.getItem("stopTimeStamp");
         var selectedWorkType = localStorage.getItem("selectedWorkType");
@@ -187,12 +291,12 @@
 
         console.log(remainingTimeConsole);
         console.log(selectedWorkType + " Stopped at: " + stopTimeStamp);
-        console.log("Total consumed time", consumedTime);
+        console.log("Total consumed time:", consumedTime);
 
-        //for disabling feature 1-12  numbers input only
+        // For disabling feature 1-12 numbers input only
         $("#numberInput").change(function () {
           var inputhours = $("#numberInput").val();
-          if (inputhours <= 0 || inputhours > 12) {
+          if (inputhours <= 0.002 || inputhours > 12) {
             $("#start-work-button").prop("disabled", true);
           } else {
             $("#start-work-button").prop("disabled", false);
@@ -208,10 +312,6 @@
           var timestamp = new Date().toLocaleString("en-us", { hour12: false });
           console.log("Work started at: " + timestamp);
           var inputhours = $("#numberInput").val();
-
-          if (selectedHours <= 0 || selectedHours > 12) {
-            $("#start-work-button").prop("disabled", false);
-          }
 
           // Store the data in session storage
           localStorage.setItem("selectedHours", selectedHours);
