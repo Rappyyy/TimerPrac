@@ -107,6 +107,16 @@
           " Hours " +
           minutes +
           " Minutes " +
+          remainingSeconds +
+          " Seconds";
+      }
+      if (remainingSeconds < 10) {
+        document.getElementById("total-time-left").innerHTML =
+          "Time Left: " +
+          hours +
+          " Hours " +
+          minutes +
+          " Minutes " +
           "0" +
           remainingSeconds +
           " Seconds";
